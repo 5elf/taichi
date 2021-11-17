@@ -15,14 +15,25 @@ from taichi.lang import _random, impl, types
 from taichi.lang.ast.transformer import TaichiSyntaxError
 from taichi.lang.enums import Layout
 from taichi.lang.exception import InvalidOperationError
-from taichi.lang.impl import *
+from taichi.lang.expr import Expr
+from taichi.lang.impl import (axes, begin_frontend_struct_for, call_internal,
+                              chain_compare, expr_init, expr_init_list, field,
+                              get_runtime, grouped, indices,
+                              materialize_callback, ndarray, one, root, static,
+                              static_assert, static_print, stop_grad,
+                              subscript, ti_assert, ti_float, ti_print, zero)
 from taichi.lang.kernel_impl import (KernelArgError, KernelDefError,
                                      data_oriented, func, kernel, pyfunc)
 from taichi.lang.matrix import Matrix, Vector
 from taichi.lang.ndrange import GroupedNDRange, ndrange
 from taichi.lang.ops import *  # pylint: disable=W0622
+# from taichi.lang.ops import  (abs, acos, activate, add, append, asin, assign,
+#                              atan2, cast, ceilo, cos, deactivate, exp, floor,
+#                              floordiv, length, log, max, min, neg, random,
+#                              rsqrt, select, sin, sqrt, tan, tanh)
 from taichi.lang.quant_impl import quant
 from taichi.lang.runtime_ops import async_flush, sync
+from taichi.lang.snode import SNode
 from taichi.lang.source_builder import SourceBuilder
 from taichi.lang.struct import Struct
 from taichi.lang.type_factory_impl import type_factory
@@ -35,6 +46,9 @@ from taichi.profiler.kernelmetrics import (CuptiMetric, default_cupti_metrics,
                                            get_predefined_cupti_metrics)
 from taichi.snode.fields_builder import FieldsBuilder
 from taichi.type.annotations import any_arr, ext_arr, template
+from taichi.type.primitive_types import (f16, f32, f64, float16, float32, i8,
+                                         i16, i32, i64, types, u8, u16, u32,
+                                         u64)
 
 import taichi as ti
 
@@ -63,7 +77,7 @@ dot = deprecated('ti.dot(a, b)', 'a.dot(b)')(Matrix.dot)
 normalized = deprecated('ti.normalized(a)',
                         'a.normalized()')(Matrix.normalized)
 
-cfg = default_cfg()
+cfg = impl.default_cfg()
 x86_64 = _ti_core.x64
 """The x64 CPU backend.
 """
