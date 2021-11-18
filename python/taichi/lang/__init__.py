@@ -19,12 +19,16 @@ from taichi.lang.enums import Layout
 from taichi.lang.exception import InvalidOperationError
 from taichi.lang.expr import Expr, make_expr_group
 from taichi.lang.field import Field, ScalarField
-from taichi.lang.impl import (axes, begin_frontend_struct_for, call_internal,
-                              chain_compare, expr_init, expr_init_list, field,
-                              get_runtime, grouped, indices,
+from taichi.lang.impl import (axes, begin_frontend_if,
+                              begin_frontend_struct_for, call_internal,
+                              chain_compare, current_cfg, expr_init,
+                              expr_init_func, expr_init_list, field,
+                              get_runtime, global_subscript_with_offset,
+                              grouped, indices, insert_expr_stmt_if_ti_func,
                               materialize_callback, ndarray, one, root, static,
                               static_assert, static_print, stop_grad,
-                              subscript, ti_assert, ti_float, ti_print, zero)
+                              subscript, ti_assert, ti_float, ti_format,
+                              ti_int, ti_print, var, zero)
 from taichi.lang.kernel_arguments import SparseMatrixProxy
 from taichi.lang.kernel_impl import (KernelArgError, KernelDefError,
                                      data_oriented, func, kernel, pyfunc)
@@ -51,7 +55,8 @@ from taichi.profiler.kernelmetrics import (CuptiMetric, default_cupti_metrics,
                                            get_predefined_cupti_metrics)
 from taichi.snode.fields_builder import FieldsBuilder
 from taichi.type.annotations import any_arr, ext_arr, template
-from taichi.type.primitive_types import f16, f32, f64, i32, i64, u32, u64
+from taichi.type.primitive_types import (f16, f32, f64, i32, i64,
+                                         integer_types, u32, u64)
 
 import taichi as ti
 
